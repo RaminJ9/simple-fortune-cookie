@@ -14,6 +14,17 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis:latest
+          image: redis:7.4-alpine
           ports:
             - containerPort: 6379
+          command:
+            - redis-server
+            - --appendonly
+            - "yes"
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
