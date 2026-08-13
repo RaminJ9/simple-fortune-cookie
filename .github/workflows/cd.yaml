@@ -14,13 +14,10 @@ jobs:
       - name: Download repo 
         uses: actions/checkout@v4
 
-        # Takes the cubeconfig secret and decodes it, and then puts it into a file called kubeconfig.
-      - name: Creates kubeconfig file
-        run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
-
-      # Uses the kubeconfig file to deploy the Kubernetes manifests to the cluster.
-      - name: Deploy Cluster
-        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/
+      - name: Deploy application
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: bash deploy.sh
 
         
       
