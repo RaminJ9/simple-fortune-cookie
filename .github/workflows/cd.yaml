@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - staging
+      - development
 
 jobs:
   deploy:
@@ -16,9 +18,21 @@ jobs:
       - name: Creates kubeconfig file
         run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
 
-        # Uses the kubeconfig file to deploy the Kubernetes manifests to the cluster.
-      - name: Deploy cluster
-        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/
+      # Uses the kubeconfig file to deploy the Kubernetes manifests to the cluster.
+      - name: Deploy development
+        if: github.ref_name == 'develop'
+        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/development/
+
+      - name: Deploy staging
+        if: github.ref_name == 'staging'
+        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/staging/
+
+      - name: Deploy production
+        if: github.ref_name == 'main'
+        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/production/
+
+        
+      
 
 
 
