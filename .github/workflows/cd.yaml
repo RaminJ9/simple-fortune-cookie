@@ -19,7 +19,8 @@ jobs:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: bash deploy.sh
 
-        
+      - name: Test application
+        run: bash test.sh
       
 
 
