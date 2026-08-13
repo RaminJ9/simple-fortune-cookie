@@ -9,6 +9,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      
     steps:
       - name: clone down repository
         uses: actions/checkout@v4
@@ -26,4 +31,24 @@ jobs:
         run: go test
         working-directory: frontend
 
+      #GHCR --- Container registry
+      - name: Login to GHCR
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build backend image
+        if: github.event_name == 'push'
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/backend:latest ./backend
+
+      - name: Build frontend image
+        if: github.event_name == 'push'
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/frontend:latest ./frontend
+
+      - name: Push backend image
+        if: github.event_name == 'push'
+        run: docker push ghcr.io/${{ github.repository_owner }}/backend:latest
+
+      - name: Push frontend image
+        if: github.event_name == 'push'
+        run: docker push ghcr.io/${{ github.repository_owner }}/frontend:latest
         
