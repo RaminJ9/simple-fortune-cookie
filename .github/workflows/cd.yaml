@@ -19,17 +19,8 @@ jobs:
         run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
 
       # Uses the kubeconfig file to deploy the Kubernetes manifests to the cluster.
-      - name: Deploy development
-        if: github.ref_name == 'develop'
-        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/development/
-
-      - name: Deploy staging
-        if: github.ref_name == 'staging'
-        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/staging/
-
-      - name: Deploy production
-        if: github.ref_name == 'main'
-        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/production/
+      - name: Deploy Cluster
+        run: kubectl --kubeconfig kubeconfig apply -f kubernetes/
 
         
       
