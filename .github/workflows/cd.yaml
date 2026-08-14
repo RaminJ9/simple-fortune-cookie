@@ -9,9 +9,9 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     steps:
-      - name: Download repo 
+      - name: Download repo
         uses: actions/checkout@v4
 
       - name: Deploy application
@@ -21,9 +21,3 @@ jobs:
 
       - name: Test application
         run: bash test.sh
-      
-
-
-
-      
-      

@@ -10,18 +10,18 @@ on:
       - main
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: clone down repository
         uses: actions/checkout@v4
       - name: download Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: "1.21"
       - name: build backend
         run: go build
         working-directory: backend
-      - name: build frontend 
+      - name: build frontend
         run: go build
         working-directory: frontend
       - name: testing
