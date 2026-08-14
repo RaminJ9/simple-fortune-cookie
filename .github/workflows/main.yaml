@@ -1,0 +1,59 @@
+name: CI/CD pipeline
+env:
+  USERNAME_DOCKERHUB: raminjvd
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - staging
+      - development
+jobs:
+  test:
+    runs-on: ubuntu:latest
+    steps:
+      - name: clone down repository
+        uses: actions/checkout@v4
+      - name: download Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+      - name: build backend
+        run: go build
+        working-directory: backend
+      - name: build frontend
+        run: go build
+        working-directory: frontend
+      - name: testing
+        run: go test
+        working-directory: frontend
+
+      #Docker hub --- Container registry
+      - name: Login to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          username: ${{env.USERNAME_DOCKERHUB}}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build backend Docker image
+        if: github.event_name == 'push'
+        run: docker build -t ${{env.USERNAME_DOCKERHUB}}/backend:latest ./backend
+      - name: Build frontend Docker image
+        if: github.event_name == 'push'
+        run: docker build -t ${{env.USERNAME_DOCKERHUB}}/frontend:latest ./frontend
+      - name: Push backend image
+        if: github.event_name == 'push'
+        run: docker push ${{env.USERNAME_DOCKERHUB}}/backend:latest
+      - name: Push frontend image
+        if: github.event_name == 'push'
+        run: docker push ${{env.USERNAME_DOCKERHUB}}/frontend:latest
+
+      #Continuous D. exercise "04-cd"
+      - name: Deploy application
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: bash deploy.sh
+      - name: Test application
+        run: bash test.sh
