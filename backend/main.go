@@ -104,7 +104,7 @@ func (h *fortuneHandler) Get(w http.ResponseWriter, r *http.Request) {
 		key := matches[1]
 		val, err := dbLink.Do("hget", "fortunes", key)
 		if err != nil {
-			fmt.Printf("redis hget failed", err.Error())
+			fmt.Printf("redis hget failed: %v\n", err)
 		} else {
 			if val != nil {
 				msg := fmt.Sprintf("%s", val.([]byte))
@@ -146,7 +146,7 @@ func (h *fortuneHandler) Create(w http.ResponseWriter, r *http.Request) {
 	if usingRedis {
 		_, err := dbLink.Do("hset", "fortunes", u.ID, u.Message)
 		if err != nil {
-			fmt.Printf("redis hset failed", err.Error())
+			fmt.Printf("redis hset failed: %v\n", err)
 		}
 	}
 
