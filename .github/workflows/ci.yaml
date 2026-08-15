@@ -65,15 +65,3 @@ jobs:
       - name: Push frontend image
         if: github.event_name == 'push'
         run: docker push ${{ env.USERNAME_DOCKERHUB }}/frontend:latest
-
-      #Continuous D. exercise "04-cd"
-      - name: Deploy application
-        if: github.event_name == 'push'
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        run: bash deploy.sh
-
-      #04-testing exercise "A means to an end"
-      - name: Test application
-        if: github.event_name == 'push'
-        run: bash test.sh

@@ -1,0 +1,26 @@
+name: CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: clone down repository
+        uses: actions/checkout@v4
+
+      #Continuous D. exercise "04-cd"
+      - name: Deploy application
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: bash deploy.sh
+
+      #Testing
+      - name: Test application
+        run: bash test.sh
