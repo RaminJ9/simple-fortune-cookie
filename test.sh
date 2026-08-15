@@ -1,7 +1,7 @@
 #test file
 
 #Find NodePort automatic
-PORT=$(kubectl get service frontend -o jsonpath='{.spec.ports[0].nodePort}')
+PORT=$(kubectl --kubeconfig kubeconfig get service frontend -o jsonpath='{.spec.ports[0].nodePort}')
 
 curl --fail --silent http://localhost:$PORT > /dev/null
 
