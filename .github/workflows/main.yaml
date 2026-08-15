@@ -69,3 +69,8 @@ jobs:
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: bash deploy.sh
+
+      #04-testing exercise "A means to an end"
+      - name: Test application
+        if: github.event_name == 'push'
+        run: bash test.sh
