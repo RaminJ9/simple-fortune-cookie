@@ -1,6 +1,8 @@
 name: CI/CD pipeline
+
 env:
   USERNAME_DOCKERHUB: raminjvd
+
 on:
   pull_request:
     branches:
@@ -10,6 +12,7 @@ on:
       - main
       - staging
       - development
+
 jobs:
   test:
     runs-on: ubuntu-latest
